@@ -7,11 +7,15 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const generateImage = async (req, res) => {
+  const { prompt, size } = req.body;
+
+  const imageSize = size === "small"
+
   try {
     const response = await openai.createImage({
-      prompt: "Polar bear on ice skates",
+      prompt: prompt,
       n: 1,
-      size: "512x512",
+      size: size,
     });
 
     const imageUrl = response.data.data[0].url;
@@ -27,7 +31,7 @@ const generateImage = async (req, res) => {
     } else {
       console.log(error.message);
     }
-    
+
     res.status(400).json({
       success: false,
       error: "The image could not be generated.",
